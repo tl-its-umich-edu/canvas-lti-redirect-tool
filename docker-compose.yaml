@@ -1,33 +1,32 @@
-version: '3.8'
+version: '3.7'
 
 services:
-  db:
+  mysql:
     image: mysql:8.0
-    command: --default-authentication-plugin=mysql_native_password
+    restart: on-failure
+    command: ['--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci', '--socket=/tmp/mysql.sock']
+    env_file:
+      - .env
     environment:
-      MYSQL_DATABASE: clrt_local
-      MYSQL_USER: clrt_user
-      MYSQL_PASSWORD: clrt_pwd
-      MYSQL_ROOT_PASSWORD: clrt_root_pwd
-      MYSQL_PORT: 3306
+      - MYSQL_ROOT_HOST=%
     ports:
       - "4306:3306"
     volumes:
-      - mysql-data:/var/lib/mysql
+       - ./.data/mysql:/var/lib/mysql
     container_name: clrt_mysql_host
 
   web:
-    build: .
+    build: 
+      context: .
+      args:
+          TZ: ${TZ}
     command: bash -c "./start.sh"
     volumes:
-      - .:/app
+      - .:/code
     ports:
-      - "3000:3000"
+      - "6000:6000"
     depends_on:
-      - db
+      - mysql
     env_file:
       - .env
     container_name: clrt_web
-
-volumes:
-  mysql-data:

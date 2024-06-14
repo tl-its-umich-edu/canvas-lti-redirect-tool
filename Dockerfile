@@ -1,46 +1,44 @@
-# FROM python:3.10-slim-bookworm
+FROM python:3.10-slim-bookworm
 
-# RUN apt-get update && \
-#     apt-get install -y --no-install-recommends \
-#     build-essential apt-transport-https default-libmysqlclient-dev pkg-config netcat-traditional vim-tiny jq python3-dev git curl && \
-#     apt-get upgrade -y && \
-#     apt-get clean -y && \
-#     rm -rf /var/lib/apt/lists/*
+EXPOSE 6000
+WORKDIR /code
+COPY requirements.txt .
 
-# # Set the working directory    
-# WORKDIR /code
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        build-essential apt-transport-https libpq-dev netcat-traditional default-libmysqlclient-dev pkg-config python3-dev xmlsec1 git && \
+    apt-get upgrade -y
 
-# # Sets the local timezone of the docker image
-# ARG TZ
-# ENV TZ ${TZ:-America/Detroit}
-# RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+# Install MariaDB from the mariadb repository rather than using Debians 
+# https://mariadb.com/kb/en/mariadb-package-repository-setup-and-usage/
+RUN curl -LsS https://r.mariadb.com/downloads/mariadb_repo_setup | bash && \
+    apt install -y --no-install-recommends libmariadb-dev
 
-# # EXPOSE port 3000 to allow communication to/from server
-# EXPOSE 3000
+RUN pip install --no-cache-dir -r requirements.txt
 
-# # Install dependencies
-# COPY requirements.txt /code/
-# RUN pip install --no-cache-dir -r requirements.txt
+COPY . .
+ARG TZ
+ENV TZ ${TZ:-America/Detroit}
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
-# # Copy the project code into the container
-# COPY . /code/
+CMD ["/code/start.sh"]
 
 
 # Use an official Python runtime image
-FROM python:3.10
+# FROM python:3.10
 
-# Set environment variables
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
+# # Set environment variables
+# ENV PYTHONDONTWRITEBYTECODE 1
+# ENV PYTHONUNBUFFERED 1
 
-EXPOSE 3000
+# EXPOSE 6000
 
-# Set the working directory inside the container
-WORKDIR /app
+# # Set the working directory inside the container
+# WORKDIR /app
 
-# Install dependencies
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+# # Install dependencies
+# COPY requirements.txt .
+# RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the Django project into the container
-COPY . .
+# # Copy the Django project into the container
+# COPY . .
