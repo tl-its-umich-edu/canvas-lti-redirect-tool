@@ -1,6 +1,6 @@
 import requests
 import jwt
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from lti_tool.views import LtiLaunchBaseView
 
 # Create your views here.
@@ -58,14 +58,7 @@ class ApplicationLaunchView(LtiLaunchBaseView):
         custom = launch_data['https://purl.imsglobal.org/spec/lti/claim/custom']
         redirect_url = custom['redirect_url']
         print(custom)
-        # cus_reconstructed = get_restrucutured_data(launch_data)
-        # token = jwt.encode(cus_reconstructed, 'test', algorithm='HS256')
-        # url = f'{redirect_url}t2/canvaslink?token={token}'
-        # print(url)
-        # response = requests.get(url)
-        # # # Check the status code
-        # print(f'Status Code: {response.status_code}')
-        # return redirect("contact")
+        return redirect("home")
 
     def handle_deep_linking_launch(self, request, lti_launch):
         ...  # Optional.

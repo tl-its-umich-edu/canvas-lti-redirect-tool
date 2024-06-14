@@ -10,9 +10,10 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
+import os
 from pathlib import Path
 from decouple import config
-import os
+# from csp.constants import SELF, UNSAFE_INLINE
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -23,12 +24,20 @@ print(BASE_DIR)
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 SECRET_KEY = config('SECRET_KEY','123455')
+# Read the CSRF_TRUSTED_ORIGINS variable from the .env file
+csrf_trusted_origins = config('CSRF_TRUSTED_ORIGINS', '')
+CSRF_TRUSTED_ORIGINS = [origin.strip() for origin in csrf_trusted_origins.split(',')]
+print(CSRF_TRUSTED_ORIGINS)
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-ALLOWED_HOSTS = ['*']
+
+allowed_hosts = config('ALLOWED_HOSTS', '')
+ALLOWED_HOSTS = [host.strip() for host in allowed_hosts.split(',')]
+print(ALLOWED_HOSTS)
+
 APPEND_SLASH=False
-CSRF_TRUSTED_ORIGINS = ['https://pu-local.loophole.site', 'https://canvas-test.it.umich.edu/']
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SAMESITE =  None
 CSRF_COOKIE_SAMESITE = None
@@ -45,13 +54,15 @@ INSTALLED_APPS = [
     "whitenoise.runserver_nostatic",
     'django.contrib.staticfiles',
     'lti_redirect',
-    'lti_tool'
+    'lti_tool',
+    # 'csp',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
+    # 'csp.middleware.CSPMiddleware',
     'lti_tool.middleware.LtiLaunchMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -143,3 +154,16 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# CONTENT_SECURITY_POLICY = {
+#     "DIRECTIVES": {
+#         "default-src": ["'self'", "ngrok-free.app","loophole.site"],
+#         "frame-ancestors": ["'self'", "canvas-test.it.umich.edu" ,"umich.beta.instructure.com"],
+#         "form-action": ["'self'"],
+#         "report-uri": "/csp-report/",
+#         "frame-src": ["instructure.com", "umich.edu"],
+#         "style-src": ["'self'", "'unsafe-inline'"],
+#         "script-src": ["'self'", "'unsafe-inline'"],
+#     },
+# }
