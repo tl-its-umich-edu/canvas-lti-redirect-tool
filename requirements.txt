@@ -1,0 +1,9 @@
+django
+pyjwt
+django-lti
+django-csp
+python-decouple
+mysqlclient
+django-mysql
+gunicorn
+whitenoise

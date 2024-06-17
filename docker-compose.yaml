@@ -1,0 +1,32 @@
+version: '3.7'
+
+services:
+  mysql:
+    image: mysql:8.0
+    restart: on-failure
+    command: ['--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci', '--socket=/tmp/mysql.sock']
+    env_file:
+      - .env
+    environment:
+      - MYSQL_ROOT_HOST=%
+    ports:
+      - "4306:3306"
+    volumes:
+       - ./.data/mysql:/var/lib/mysql
+    container_name: clrt_mysql_host
+
+  web:
+    build: 
+      context: .
+      args:
+          TZ: ${TZ}
+    command: bash -c "./start.sh"
+    volumes:
+      - .:/code
+    ports:
+      - "6000:6000"
+    depends_on:
+      - mysql
+    env_file:
+      - .env
+    container_name: clrt_web
