@@ -1,4 +1,4 @@
-import random
+import random, logging
 import string
 import requests
 import jwt
@@ -8,13 +8,16 @@ from django.shortcuts import redirect, render
 from lti_tool.views import LtiLaunchBaseView
 from django.contrib.auth.models import User
 
+logger = logging.getLogger(__name__)
+
 # Create your views here.
 def get_home_template(request):
   return render(request, 'home.html')
 
+def error(request):
+    return render(request, "error.html")
+
 def get_restrucutured_data(launch_data):
-    print('you are in get_restructured_data')
-    # print(launch_data)
     custom = launch_data['https://purl.imsglobal.org/spec/lti/claim/custom']
     course_title = launch_data['https://purl.imsglobal.org/spec/lti/claim/context']['title']
     lis = launch_data['https://purl.imsglobal.org/spec/lti/claim/lis']
@@ -48,7 +51,6 @@ def get_restrucutured_data(launch_data):
         "sis_id": custom["course_sis_account_id"]
     }  
     }
-    print(restructured_data)
     return restructured_data
 
 def login_user_from_lti(request, launch_data):
@@ -57,25 +59,33 @@ def login_user_from_lti(request, launch_data):
         last_name = launch_data['family_name']
         email = launch_data['email']
         username = launch_data['https://purl.imsglobal.org/spec/lti/claim/custom']['login_id']
+        logger.info(f'the user {first_name} {last_name} {email} {username} launch the tool')
         user_obj = User.objects.get(username=username)
     except User.DoesNotExist:
+        logger.warn(f'user {username} never logged into the app, hence creating the user')
         password = ''.join(random.sample(string.ascii_letters, settings.RANDOM_PASSWORD_DEFAULT_LENGTH))
         user_obj = User.objects.create_user(username=username, email=email, password=password, first_name=first_name,
                                             last_name=last_name)
+    except Exception as e:
+        logger.error(f'error occured while getting the user info from auth_user table due to {e}')
+        return False
         
-    django.contrib.auth.login(request, user_obj)
+        
+    try: 
+        django.contrib.auth.login(request, user_obj)
+    except (ValueError, TypeError, Exception)  as e:
+        logger.error(f'Logging user after LTI launch failed due to {e}')
+        return False
+    return True
 
 class ApplicationLaunchView(LtiLaunchBaseView):
     
     # @xframe_options_exempt
     def handle_resource_launch(self, request, lti_launch):
         ...  # Required. Typically redirects the users to the appropriate page.
-        print('you are in LTI launch')
         launch_data = lti_launch.get_launch_data()
-        custom = launch_data['https://purl.imsglobal.org/spec/lti/claim/custom']
-        redirect_url = custom['redirect_url']
-        login_user_from_lti(request, launch_data)
-        print(custom)
+        if not login_user_from_lti(request, launch_data):
+            return redirect("error")
         return redirect("home")
 
     def handle_deep_linking_launch(self, request, lti_launch):

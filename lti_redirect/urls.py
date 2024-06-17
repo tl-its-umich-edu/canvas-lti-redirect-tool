@@ -4,6 +4,7 @@ from lti_tool.views import jwks, OIDCLoginInitView
 from lti_redirect.views import ApplicationLaunchView
 urlpatterns = [
      path('', views.get_home_template, name = 'home'),
+     path('error', views.error, name="error" ),
 
      # LTI launch urls
     path(".well-known/jwks.json", jwks, name="jwks"),
