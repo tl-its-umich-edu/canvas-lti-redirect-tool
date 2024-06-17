@@ -1,7 +1,12 @@
+import random
+import string
 import requests
 import jwt
+import django.contrib.auth
+from django.conf import settings
 from django.shortcuts import redirect, render
 from lti_tool.views import LtiLaunchBaseView
+from django.contrib.auth.models import User
 
 # Create your views here.
 def get_home_template(request):
@@ -46,7 +51,19 @@ def get_restrucutured_data(launch_data):
     print(restructured_data)
     return restructured_data
 
-
+def login_user_from_lti(request, launch_data):
+    try:
+        first_name = launch_data['given_name']
+        last_name = launch_data['family_name']
+        email = launch_data['email']
+        username = launch_data['https://purl.imsglobal.org/spec/lti/claim/custom']['login_id']
+        user_obj = User.objects.get(username=username)
+    except User.DoesNotExist:
+        password = ''.join(random.sample(string.ascii_letters, settings.RANDOM_PASSWORD_DEFAULT_LENGTH))
+        user_obj = User.objects.create_user(username=username, email=email, password=password, first_name=first_name,
+                                            last_name=last_name)
+        
+    django.contrib.auth.login(request, user_obj)
 
 class ApplicationLaunchView(LtiLaunchBaseView):
     
@@ -57,6 +74,7 @@ class ApplicationLaunchView(LtiLaunchBaseView):
         launch_data = lti_launch.get_launch_data()
         custom = launch_data['https://purl.imsglobal.org/spec/lti/claim/custom']
         redirect_url = custom['redirect_url']
+        login_user_from_lti(request, launch_data)
         print(custom)
         return redirect("home")
 

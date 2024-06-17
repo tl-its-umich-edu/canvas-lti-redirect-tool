@@ -10,6 +10,12 @@
 <body>
 <div class="navbar">
     <a href="{% url 'home' %}" class="navbar-brand">LTI Redirect TOOL</a>
+    {% if user.is_authenticated and user.is_superuser %}
+    <a class="navbar-item" href="{% url 'admin:index' %}">Admin</a>
+    {% endif %}
+    {% if user.is_authenticated %}
+    <span class="navbar-user">{{ user.username }}</span>
+    {% endif %}
 </div>
 
 <div class="body-content">

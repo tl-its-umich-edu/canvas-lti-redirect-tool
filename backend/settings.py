@@ -32,6 +32,7 @@ print(CSRF_TRUSTED_ORIGINS)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+RANDOM_PASSWORD_DEFAULT_LENGTH = 32
 
 allowed_hosts = config('ALLOWED_HOSTS', '')
 ALLOWED_HOSTS = [host.strip() for host in allowed_hosts.split(',')]
