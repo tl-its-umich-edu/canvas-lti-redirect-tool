@@ -53,5 +53,8 @@ python manage.py shell -c "from django.core.management.utils import get_random_s
 6. Save
 7. Go to the Canvas(platform) and install the tool at account/cource and copy the deployment id
 
+## Make a user superuser
+1. go to the `auth_user` table and set `is_superuser` and `is_staff` to `1` or `true` this will give the logged user access to admin interface
+
 
 
