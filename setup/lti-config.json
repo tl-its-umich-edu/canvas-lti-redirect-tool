@@ -1,0 +1,44 @@
+{
+  "title": "Canvas LTI Redirect Tool",
+  "scopes": [],
+  "extensions": [
+      {
+          "domain": "{app-hostname}",
+          "platform": "canvas.instructure.com",
+          "settings": {
+              "platform": "canvas.instructure.com",
+              "placements": [
+                  {
+                    "default": "disabled",  
+                    "placement": "course_navigation",
+                    "message_type": "LtiResourceLinkRequest",
+                    "target_link_uri": "https://{app-hostname}/ltilaunch"
+                  }
+              ]
+          },
+          "privacy_level": "public"
+      }
+  ],
+  "public_jwk": {},
+  "description": "This is canvas LTI redirect tool",
+  "custom_fields": {
+      "roles": "$Canvas.membership.roles",
+      "term_id": "$Canvas.term.id",
+      "login_id": "$Canvas.user.loginId",
+      "term_end": "$Canvas.term.endAt",
+      "course_id": "$Canvas.course.id",
+      "term_name": "$Canvas.term.name",
+      "canvas_url": "$Canvas.api.baseUrl",
+      "term_start": "$Canvas.term.startAt",
+      "redirect_url": "https://dev.dev.umgpt.umich.edu/",
+      "course_status": "$Canvas.course.workflowState",
+      "user_canvas_id": "$Canvas.user.id",
+      "course_account_name": "$Canvas.account.name",
+      "course_enroll_status": "$Canvas.enrollment.enrollmentState",
+      "course_sis_account_id": "$Canvas.course.sisSourceId",
+      "course_canvas_account_id": "$Canvas.account.id"
+  },
+  "public_jwk_url": "https://{app-hostname}/.well-known/jwks.json",
+  "target_link_uri": "https://{app-hostname}/ltilaunch",
+  "oidc_initiation_url": "https://{app-hostname}/init/<uuid:lti-registration>/"
+}

@@ -10,14 +10,16 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
-import os
+import os, logging
 from pathlib import Path
 from decouple import config
 # from csp.constants import SELF, UNSAFE_INLINE
 
+logger = logging.getLogger(__name__)
+logging.basicConfig(level='INFO')
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-print(BASE_DIR)
 
 
 # Quick-start development settings - unsuitable for production
@@ -27,11 +29,12 @@ SECRET_KEY = config('SECRET_KEY','123455')
 # Read the CSRF_TRUSTED_ORIGINS variable from the .env file
 csrf_trusted_origins = config('CSRF_TRUSTED_ORIGINS', '')
 CSRF_TRUSTED_ORIGINS = [origin.strip() for origin in csrf_trusted_origins.split(',')]
-print(CSRF_TRUSTED_ORIGINS)
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DJANGO_DEBUG', default=False, cast=bool)
+print(DEBUG)
+RANDOM_PASSWORD_DEFAULT_LENGTH = 32
 
 allowed_hosts = config('ALLOWED_HOSTS', '')
 ALLOWED_HOSTS = [host.strip() for host in allowed_hosts.split(',')]
@@ -78,6 +81,44 @@ STORAGES = {
         "BACKEND": 'whitenoise.storage.CompressedManifestStaticFilesStorage',
     },
 }
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        "generic": {
+            "format": "%(asctime)s [%(levelname)s] [%(filename)s:%(lineno)d] %(message)s",
+            "datefmt": "[%Y-%m-%d %H:%M:%S %z]",
+            "class": "logging.Formatter",
+        }
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'generic',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'propagate': False,
+            'level': config('DJANGO_LOG_LEVEL', 'DEBUG'),
+        },
+        'rules': {
+            'handlers': ['console'],
+            'propagate': False,
+            'level': 'INFO',
+        },
+        '': {
+            'level': 'WARNING',
+            'handlers': ['console'],
+        },
+
+    },
+    'root': {
+        'level': 'INFO',
+        'handlers': ['console']
+    },
+}
 
 TEMPLATES = [
     {
@@ -85,6 +126,7 @@ TEMPLATES = [
         'DIRS': [os.path.join(BASE_DIR, "templates")],
         'APP_DIRS': True,
         'OPTIONS': {
+            'debug': DEBUG,
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',

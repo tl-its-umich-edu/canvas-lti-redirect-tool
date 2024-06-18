@@ -12,29 +12,26 @@
 }
 
 .navbar a {
-  text-decoration: none;
   color: inherit;
 }
 
 .navbar-brand {
   font-size: 1.2em;
   font-weight: 600;
+  text-decoration: none;
 }
+.navbar-user{
+  font-size: 1em;
+  font-weight: 600;
+  padding-left: 30px;
 
+}
 .navbar-item {
-  font-variant: small-caps;
-  margin-left: 30px;
+  float: right;
+  text-decoration: underline;
 }
 
 .body-content {
   padding: 5px;
   font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-input[name=message] {
-  width: 80%;
-}
-
-.message_list th,td {
-  text-align: left;
-  padding-right: 15px;
 }
