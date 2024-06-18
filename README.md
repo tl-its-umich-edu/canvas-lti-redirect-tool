@@ -44,6 +44,7 @@ python manage.py shell -c "from django.core.management.utils import get_random_s
    ` for Eg: https://clrt-local.loophole.site/init/0b54a91b-cac6-4c96-ba1e/`
 5. Configure the LTI configuration from CLRT tool going to admin again. Give the following value. Note: `<canvas-instance>: ['canvas.test', 'canvas.beta']`
       1. Name: any name
+      2. Issuer: https://<canvas-instance>.instructure.com
       2. Client ID: (get this from Platform)
       3. Auth URL: https://<canvas-instance>.instructure.com/api/lti/authorize_redirect
       4. Access token URL: https://<canvas-instance>.instructure.com/login/oauth2/token

@@ -9,9 +9,10 @@
               "platform": "canvas.instructure.com",
               "placements": [
                   {
-                      "placement": "course_navigation",
-                      "message_type": "LtiResourceLinkRequest",
-                      "target_link_uri": "https://{app-hostname}/ltilaunch"
+                    "default": "disabled",  
+                    "placement": "course_navigation",
+                    "message_type": "LtiResourceLinkRequest",
+                    "target_link_uri": "https://{app-hostname}/ltilaunch"
                   }
               ]
           },
