@@ -50,7 +50,7 @@ python manage.py shell -c "from django.core.management.utils import get_random_s
       5. Keyset URL: https://<canvas-instance>.instructure.com/api/lti/security/jwks
       6. DEPLOYMENT ID: get this as it is described the step 7 and paste 
 6. Save
-7. Go to the Canvas(platform) and install the tool at account/cource and copy the deployment id
+7. Go to the Canvas(platform) add the LTI tool at account/course level and copy the deployment id by clicking the setting button next to it.
 
 ## Make a user superuser
 1. go to the `auth_user` table and set `is_superuser` and `is_staff` to `1` or `true` this will give the logged user access to admin interface
