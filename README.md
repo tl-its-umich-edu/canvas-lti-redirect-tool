@@ -38,11 +38,15 @@ python manage.py shell -c "from django.core.management.utils import get_random_s
  docker exec -it clrt_web /bin/bash -c \
   "python manage.py rotate_keys" 
 ```
-2. use the `setup/lti-config.json` for registing the LTI tool. Replace all the `{app-hostname}` with your web proxy url.  
-3. Create superuser via using `python manage.py createsuperuser', need to run a proxy like loophole or ngrok for LTI installation and login with that user. Go to https://{app-hostname}/admin/. 
-4. Goto `LTIRegistration` to configure an LTI tool from admin console. This will create the `uuid` automatically. Hold on to that value and update the `OpenID Connect Initiation Url` in the LTI tool registration from Canvas with this id. 
+
+2. Create superuser via using `python manage.py createsuperuser', need to run a proxy like loophole or ngrok for LTI installation and login with that user. Go to https://{app-hostname}/admin/.  
+3. Go to Canvas instance, choose Developer Keys in admin site
+4. Add LTI Key
+5. Choose Paste JSON method
+6. Goto `LTIRegistration` to configure an LTI tool from admin console. This will create the `uuid` automatically. Hold on to that value and update the `OpenID Connect Initiation Url` in the LTI tool registration from Canvas with this id. 
    ` for Eg: https://clrt-local.loophole.site/init/0b54a91b-cac6-4c96-ba1e/`
-5. Configure the LTI configuration from CLRT tool going to admin again. Give the following value. Note: `<canvas-instance>: ['canvas.test', 'canvas.beta']`
+7. use the `setup/lti-config.json` for registing the LTI tool. Replace all the `{app-hostname}` with your web proxy url and <uuid:lti-registration> with UUID value from LTI tool registration.  
+8. Configure the LTI configuration from CLRT tool going to admin again. Give the following value. Note: `<canvas-instance>: ['canvas.test', 'canvas.beta']`
       1. Name: any name
       2. Issuer: https://<canvas-instance>.instructure.com
       2. Client ID: (get this from Platform)
@@ -50,8 +54,8 @@ python manage.py shell -c "from django.core.management.utils import get_random_s
       4. Access token URL: https://<canvas-instance>.instructure.com/login/oauth2/token
       5. Keyset URL: https://<canvas-instance>.instructure.com/api/lti/security/jwks
       6. DEPLOYMENT ID: get this as it is described the step 7 and paste 
-6. Save
-7. Go to the Canvas(platform) add the LTI tool at account/course level and copy the deployment id by clicking the setting button next to it.
+9. Save
+10. Go to the Canvas(platform) add the LTI tool at account/course level and copy the deployment id by clicking the setting button next to it.
 
 ## Make a user superuser
 1. go to the `auth_user` table and set `is_superuser` and `is_staff` to `1` or `true` this will give the logged user access to admin interface
