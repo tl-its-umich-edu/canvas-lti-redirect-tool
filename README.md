@@ -27,11 +27,10 @@ mostly just MySQL information as well as locations of other configuration files.
     docker compose up
     ```
 
-1.
+1. generate Django secret using below command
 ```sh
 python manage.py shell -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"
 ```
-1.
 
 ## LTI install
 1. Need to run this command once docker container is up in order for LTI to work. This is important step otherwise the LTI tool launch won't happen
@@ -40,7 +39,7 @@ python manage.py shell -c "from django.core.management.utils import get_random_s
   "python manage.py rotate_keys" 
 ```
 2. use the `setup/lti-config.json` for registing the LTI tool. Replace all the `{app-hostname}` with your web proxy url.  
-3. Create superuser via using `python manage.py createsuperuser', need to run a proxy like loophole or ngrok for LTI installation and login with that user. Go to https://<url>/admin/. 
+3. Create superuser via using `python manage.py createsuperuser', need to run a proxy like loophole or ngrok for LTI installation and login with that user. Go to https://{app-hostname}/admin/. 
 4. Goto `LTIRegistration` to configure an LTI tool from admin console. This will create the `uuid` automatically. Hold on to that value and update the `OpenID Connect Initiation Url` in the LTI tool registration from Canvas with this id. 
    ` for Eg: https://clrt-local.loophole.site/init/0b54a91b-cac6-4c96-ba1e/`
 5. Configure the LTI configuration from CLRT tool going to admin again. Give the following value. Note: `<canvas-instance>: ['canvas.test', 'canvas.beta']`
