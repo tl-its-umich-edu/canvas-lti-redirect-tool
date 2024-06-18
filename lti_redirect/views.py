@@ -1,12 +1,11 @@
 import random, logging
 import string
-import requests
-import jwt
 import django.contrib.auth
 from django.conf import settings
 from django.shortcuts import redirect, render
 from lti_tool.views import LtiLaunchBaseView
 from django.contrib.auth.models import User
+from lti_redirect.maizey import SendToMaizey
 
 logger = logging.getLogger(__name__)
 
@@ -17,41 +16,24 @@ def get_home_template(request):
 def error(request):
     return render(request, "error.html")
 
-def get_restrucutured_data(launch_data):
-    custom = launch_data['https://purl.imsglobal.org/spec/lti/claim/custom']
-    course_title = launch_data['https://purl.imsglobal.org/spec/lti/claim/context']['title']
-    lis = launch_data['https://purl.imsglobal.org/spec/lti/claim/lis']
-    # Restructure the data as per the requirements
-    restructured_data = {
-    "canvas_url": custom["canvas_url"],
-    "course": {
-        "id": custom["course_id"],
-        "name": course_title,
-        "sis_id": lis["course_offering_sourcedid"],
-        "workflow_state": custom["course_status"],
-        "enroll_status":custom["course_enroll_status"]
-    },
-    "term": {
-        "id": custom["term_id"],
-        "name": custom["term_name"],
-        "term_start_date": custom["term_start"],
-        "term_end_date": custom["term_end"]
-    },
-    "user": {
-        "id": custom["user_canvas_id"],
-        "login_id": custom["login_id"],
-        "sis_id": lis["person_sourcedid"],
-        "roles": custom["roles"].split(","),
-        "email_address": launch_data["email"],
-        "name": launch_data["name"],
-    } ,
-    "account": {
-        "id": custom["course_canvas_account_id"],
-        "name": custom["course_account_name"],
-        "sis_id": custom["course_sis_account_id"]
-    }  
-    }
-    return restructured_data
+def validate_custom_lti_launch_data(lti_launch):
+    expected_keys = [
+    "roles", "term_id", "login_id", "term_end", "course_id", "term_name", "canvas_url", 
+    "term_start", "redirect_url", "course_status", "user_canvas_id", 
+    "course_account_name", "course_enroll_status", "course_sis_account_id", 
+    "course_canvas_account_id"]
+    main_key = "https://purl.imsglobal.org/spec/lti/claim/custom"
+    if main_key not in lti_launch:
+        logger.error(f"LTI custom '{main_key}' variables are not configured")
+        return False
+    
+    custom_data = lti_launch[main_key]
+    missing_keys = [key for key in expected_keys if key not in custom_data]
+    if missing_keys:
+        logger.error(f"LTI custom variables are missing in the '{main_key}' {', '.join(missing_keys)}")
+        return False
+    logger.debug("All keys are present.")
+    return True
 
 def login_user_from_lti(request, launch_data):
     try:
@@ -84,7 +66,11 @@ class ApplicationLaunchView(LtiLaunchBaseView):
     def handle_resource_launch(self, request, lti_launch):
         ...  # Required. Typically redirects the users to the appropriate page.
         launch_data = lti_launch.get_launch_data()
+        if not validate_custom_lti_launch_data(launch_data):
+            return redirect("error")
         if not login_user_from_lti(request, launch_data):
+            return redirect("error")
+        if not SendToMaizey(launch_data).send_to_maizey():
             return redirect("error")
         return redirect("home")
 
