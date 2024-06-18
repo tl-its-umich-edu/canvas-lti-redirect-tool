@@ -7,7 +7,7 @@ class SendToMaizey():
     
     def __init__(self, lti_launch_data) -> None:
         self.lti_launch_data = lti_launch_data
-        self.maizey_jwt_secret = config('MAIZEY_JWT_SECRET')
+        self.maizey_jwt_secret = config('MAIZEY_JWT_SECRET', default=None)
         self.lti_custom_data = self.lti_launch_data['https://purl.imsglobal.org/spec/lti/claim/custom']
     
     def get_restructured_data(self):
@@ -48,12 +48,15 @@ class SendToMaizey():
       return restructured_data
 
     def send_to_maizey(self):
+       if not self.maizey_jwt_secret:
+           logger.error("Maizey JWT secret is not configured")
+           return False
        course_jwt = jwt.encode(self.get_restructured_data(), self.maizey_jwt_secret, algorithm='HS256')
        maizey_url = f"{self.lti_custom_data['redirect_url']}t2/canvaslink?token={course_jwt}"
        try:
            response = requests.get(maizey_url)
            response.raise_for_status()
-           # currently this is maizey url is retuning a HTML text
+           # currently response from maizey endpoint upon success is retuning a HTML text
            logger.info(f"Maizey response: {response.text}")
            return True
        except requests.exceptions.RequestException as e:
