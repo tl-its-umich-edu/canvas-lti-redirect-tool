@@ -33,12 +33,10 @@ CSRF_TRUSTED_ORIGINS = [origin.strip() for origin in csrf_trusted_origins.split(
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DJANGO_DEBUG', default=False, cast=bool)
-print(DEBUG)
 RANDOM_PASSWORD_DEFAULT_LENGTH = 32
 
 allowed_hosts = config('ALLOWED_HOSTS', '')
 ALLOWED_HOSTS = [host.strip() for host in allowed_hosts.split(',')]
-print(ALLOWED_HOSTS)
 
 APPEND_SLASH=False
 CSRF_COOKIE_SECURE = True
@@ -58,6 +56,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'lti_redirect',
     'lti_tool',
+    'django_mysql'
     # 'csp',
 ]
 
@@ -152,6 +151,15 @@ DATABASES = {
         'PASSWORD': config('MYSQL_PASSWORD'),
         'HOST': config('MYSQL_HOST'), 
         'PORT': config('MYSQL_PORT'), 
+    }
+}
+
+# This is needed to allow the LTI tool to work with the Django cache when running on multiple workers
+CACHES = {
+    "default": {
+        "BACKEND": "django_mysql.cache.MySQLCache",
+        "LOCATION": "django_clrt_cache",
+        "KEY_PREFIX": "clrt",
     }
 }
 

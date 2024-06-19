@@ -7,3 +7,4 @@ mysqlclient
 django-mysql
 gunicorn
 whitenoise
+debugpy
