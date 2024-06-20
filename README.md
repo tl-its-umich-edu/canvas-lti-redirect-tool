@@ -14,8 +14,13 @@ To follow the instructions below, you will at minimum need the following:
 1. Copy the `.env.sample` file as `.env`. 
     ```sh
     cp .env.sample .env
+
 1. Examine the `.env` file. It will have the suggested default environment variable settings,
 mostly just MySQL information as well as locations of other configuration files.
+
+1. Edit `.env`, referring to the web proxy started above using loophole or ngrok, update the values for the settings…
+   * `ALLOWED_HOSTS` — Add the **_hostname_** of the proxy.
+   * `CSRF_TRUSTED_ORIGINS` — Add the **_base URL_** of the proxy.
 
 1. Start the Docker build process (this will take some time).
     ```sh
@@ -35,11 +40,14 @@ python manage.py shell -c "from django.core.management.utils import get_random_s
 ## LTI install
 1. Need to run this command once docker container is up in order for LTI to work. This is important step otherwise the LTI tool launch won't happen
 ```sh
- docker exec -it clrt_web /bin/bash -c \
-  "python manage.py rotate_keys" 
+ docker compose exec -it web ./manage.py rotate_keys 
 ```
 
-2. Create superuser via using `python manage.py createsuperuser', need to run a proxy like loophole or ngrok for LTI installation and login with that user. Go to https://{app-hostname}/admin/.  
+2. Create superuser using 
+   ```
+   docker compose exec -it web ./manage.py createsuperuser
+   ```
+   need to run a proxy like loophole or ngrok for LTI installation and login with that user. Go to https://{app-hostname}/admin/.  
 3. Go to Canvas instance, choose Developer Keys in admin site
 4. Add LTI Key
 5. Choose Paste JSON method
