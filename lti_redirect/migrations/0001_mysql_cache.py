@@ -23,3 +23,4 @@ class Migration(migrations.Migration):
             "DROP TABLE `django_clrt_cache`",
         ),
     ]
+    
