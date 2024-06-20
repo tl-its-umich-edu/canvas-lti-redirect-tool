@@ -17,6 +17,9 @@ RUN curl -LsS https://r.mariadb.com/downloads/mariadb_repo_setup | bash && \
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
+
+RUN python manage.py collectstatic --verbosity 0 --noinput
+
 ARG TZ
 ENV TZ ${TZ:-America/Detroit}
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone

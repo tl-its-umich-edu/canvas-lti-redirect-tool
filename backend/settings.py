@@ -146,11 +146,11 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': config('MYSQL_DATABASE'),
-        'USER': config('MYSQL_USER'),
-        'PASSWORD': config('MYSQL_PASSWORD'),
-        'HOST': config('MYSQL_HOST'), 
-        'PORT': config('MYSQL_PORT'), 
+        'NAME': config('MYSQL_DATABASE', 'clrt_local'),
+        'USER': config('MYSQL_USER', 'clrt_user'),
+        'PASSWORD': config('MYSQL_PASSWORD', 'clrt_pwd'),
+        'HOST': config('MYSQL_HOST', 'clrt_mysql_host'), 
+        'PORT': config('MYSQL_PORT', '3306'), 
     }
 }
 

@@ -25,7 +25,6 @@ done
 
 echo Running python startups
 python manage.py migrate
-python manage.py collectstatic --verbosity 0 --noinput
 
 if [ "$DEBUGPY_ENABLE" = "True" ]; then
       echo "Starting Gunicorn for DEBUGPY debugging"
