@@ -151,6 +151,9 @@ DATABASES = {
         'PASSWORD': config('MYSQL_PASSWORD', 'clrt_pwd'),
         'HOST': config('MYSQL_HOST', 'clrt_mysql_host'), 
         'PORT': config('MYSQL_PORT', '3306'), 
+        'OPTIONS': {
+                'charset': 'utf8mb4',
+        },
     }
 }
 
