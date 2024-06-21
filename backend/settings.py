@@ -29,10 +29,12 @@ SECRET_KEY = config('SECRET_KEY','123455')
 # Read the CSRF_TRUSTED_ORIGINS variable from the .env file
 csrf_trusted_origins = config('CSRF_TRUSTED_ORIGINS', '')
 CSRF_TRUSTED_ORIGINS = [origin.strip() for origin in csrf_trusted_origins.split(',')]
+print(os.path.join(BASE_DIR, "templates"))
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DJANGO_DEBUG', default=False, cast=bool)
+print(f"DEBUG: {DEBUG} type: {type(DEBUG)}")
 RANDOM_PASSWORD_DEFAULT_LENGTH = 32
 
 allowed_hosts = config('ALLOWED_HOSTS', '')

@@ -53,14 +53,15 @@ class SendToMaizey():
            return False
        course_jwt = jwt.encode(self.get_restructured_data(), self.maizey_jwt_secret, algorithm='HS256')
        maizey_url = f"{self.lti_custom_data['redirect_url']}t2/canvaslink?token={course_jwt}"
-       try:
-           response = requests.get(maizey_url)
-           response.raise_for_status()
-           # currently response from maizey endpoint upon success is retuning a HTML text
-           logger.info(f"Maizey response: {response.text}")
-           return True
-       except requests.exceptions.RequestException as e:
-            logger.error(f"Error sending course data to Maizey: {e}")
-            return False
+       return maizey_url
+    #    try:
+    #        response = requests.get(maizey_url)
+    #        response.raise_for_status()
+    #        # currently response from maizey endpoint upon success is retuning a HTML text
+    #        logger.info(f"Maizey response: {response.text}")
+    #        return True
+    #    except requests.exceptions.RequestException as e:
+    #         logger.error(f"Error sending course data to Maizey: {e}")
+    #         return False
        
         

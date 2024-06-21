@@ -70,9 +70,16 @@ class ApplicationLaunchView(LtiLaunchBaseView):
             return redirect("error")
         if not login_user_from_lti(request, launch_data):
             return redirect("error")
-        if not SendToMaizey(launch_data).send_to_maizey():
-            return redirect("error")
-        return redirect("home")
+        maizey_url= SendToMaizey(launch_data).send_to_maizey()
+        logger.info(f"Maizey URL: {maizey_url}")
+        # logger.info(f"Course JWT: {course_jwt}")
+        context = {
+            "maizey_url": maizey_url,
+        }
+        # if not SendToMaizey(launch_data).send_to_maizey():
+        #     return redirect("error")
+        # return redirect("home")
+        return render(request, "home.html", context)
 
     def handle_deep_linking_launch(self, request, lti_launch):
         ...  # Optional.
