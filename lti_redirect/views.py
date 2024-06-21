@@ -77,10 +77,7 @@ class ApplicationLaunchView(LtiLaunchBaseView):
         context = {
             "maizey_url": maizey_url,
         }
-        if request.user.is_superuser:
-            return render(request, "home.html", context)
-        else:
-            return HttpResponseRedirect(maizey_url)
+        return render(request, "home.html", context)
 
     def handle_deep_linking_launch(self, request, lti_launch):
         ...  # Optional.
