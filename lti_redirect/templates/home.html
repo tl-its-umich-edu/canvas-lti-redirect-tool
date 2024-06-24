@@ -7,7 +7,7 @@
     <link rel="stylesheet" type="text/css" href="{% static 'home.css' %}"/>
     <script type=""text/javascript">
     window.onload = function() {
-        let maizey_url = "{{ maizey_url }}";
+        let maizey_url = "{{ maizey_url }}"
         if(maizey_url) {
             window.open(maizey_url, '_blank')
         }
@@ -28,9 +28,6 @@
 
 <div class="body-content">
     {% block content %}
-    {% if user.is_authenticated %}
-     <a href="{{ maizey_url }}" target="_blank">Maizey Redirect URL</a>
-    {% endif %}
     {% endblock %}
     <hr/>
     <footer>
