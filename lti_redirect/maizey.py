@@ -1,5 +1,6 @@
-import jwt, logging, requests
+import jwt, logging
 from decouple import config
+from jwt.exceptions import InvalidKeyError
 
 logger = logging.getLogger(__name__)
 
@@ -48,19 +49,13 @@ class SendToMaizey():
       return restructured_data
 
     def send_to_maizey(self):
+       maizey_url = None
        if not self.maizey_jwt_secret:
            logger.error("Maizey JWT secret is not configured")
-           return False
-       course_jwt = jwt.encode(self.get_restructured_data(), self.maizey_jwt_secret, algorithm='HS256')
-       maizey_url = f"{self.lti_custom_data['redirect_url']}t2/canvaslink?token={course_jwt}"
        try:
-           response = requests.get(maizey_url)
-           response.raise_for_status()
-           # currently response from maizey endpoint upon success is retuning a HTML text
-           logger.info(f"Maizey response: {response.text}")
-           return True
-       except requests.exceptions.RequestException as e:
-            logger.error(f"Error sending course data to Maizey: {e}")
-            return False
-       
-        
+        course_jwt = jwt.encode(self.get_restructured_data(), self.maizey_jwt_secret, algorithm='HS256')
+        maizey_url = f"{self.lti_custom_data['redirect_url']}t2/canvaslink?token={course_jwt}"
+        logger.info(f"Maizey with course JWT URL: {maizey_url}")
+       except (InvalidKeyError,Exception) as e:
+           logger.error(f"Error encoding course data to JWT: {e}")
+       return maizey_url

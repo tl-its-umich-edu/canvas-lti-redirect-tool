@@ -6,6 +6,7 @@ from django.shortcuts import redirect, render
 from lti_tool.views import LtiLaunchBaseView
 from django.contrib.auth.models import User
 from lti_redirect.maizey import SendToMaizey
+from django.http import HttpResponseRedirect
 
 logger = logging.getLogger(__name__)
 
@@ -70,9 +71,16 @@ class ApplicationLaunchView(LtiLaunchBaseView):
             return redirect("error")
         if not login_user_from_lti(request, launch_data):
             return redirect("error")
-        if not SendToMaizey(launch_data).send_to_maizey():
+        maizey_url = SendToMaizey(launch_data).send_to_maizey()
+        if not maizey_url:
             return redirect("error")
-        return redirect("home")
+        context = {
+            "maizey_url": maizey_url,
+        }
+        if request.user.is_superuser:
+            return render(request, "home.html", context)
+        else:
+            return HttpResponseRedirect(maizey_url)
 
     def handle_deep_linking_launch(self, request, lti_launch):
         ...  # Optional.

@@ -5,6 +5,14 @@
     <title>{% block title %}{% endblock %}</title>
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'home.css' %}"/>
+    <script type=""text/javascript">
+    window.onload = function() {
+        let maizey_url = "{{ maizey_url }}"
+        if(maizey_url) {
+            window.open(maizey_url, '_blank')
+        }
+    }
+    </script>
 </head>
 
 <body>
