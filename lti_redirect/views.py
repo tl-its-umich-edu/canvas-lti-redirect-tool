@@ -63,7 +63,6 @@ def login_user_from_lti(request, launch_data):
 
 class ApplicationLaunchView(LtiLaunchBaseView):
     
-    # @xframe_options_exempt
     def handle_resource_launch(self, request, lti_launch):
         ...  # Required. Typically redirects the users to the appropriate page.
         launch_data = lti_launch.get_launch_data()

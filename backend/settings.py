@@ -13,7 +13,6 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 import os, logging
 from pathlib import Path
 from decouple import config
-# from csp.constants import SELF, UNSAFE_INLINE
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level='INFO')
@@ -38,10 +37,13 @@ RANDOM_PASSWORD_DEFAULT_LENGTH = 32
 allowed_hosts = config('ALLOWED_HOSTS', '')
 ALLOWED_HOSTS = [host.strip() for host in allowed_hosts.split(',')]
 
+
 APPEND_SLASH=False
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SAMESITE =  None
 CSRF_COOKIE_SAMESITE = None
+SECURE_PROXY_SSL_HEADER =('HTTP_X_FORWARDED_PROTO', 'https')
+USE_X_FORWARDED_HOST = True
 
 
 # Application definition
@@ -54,23 +56,21 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     "whitenoise.runserver_nostatic",
     'django.contrib.staticfiles',
+    'django_mysql',
     'lti_redirect',
     'lti_tool',
-    'django_mysql'
-    # 'csp',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
-    # 'csp.middleware.CSPMiddleware',
     'lti_tool.middleware.LtiLaunchMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'csp.middleware.CSPMiddleware',
 ]
 
 ROOT_URLCONF = 'backend.urls'
@@ -209,14 +209,9 @@ STATIC_URL = '/static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-# CONTENT_SECURITY_POLICY = {
-#     "DIRECTIVES": {
-#         "default-src": ["'self'", "ngrok-free.app","loophole.site"],
-#         "frame-ancestors": ["'self'", "canvas-test.it.umich.edu" ,"umich.beta.instructure.com"],
-#         "form-action": ["'self'"],
-#         "report-uri": "/csp-report/",
-#         "frame-src": ["instructure.com", "umich.edu"],
-#         "style-src": ["'self'", "'unsafe-inline'"],
-#         "script-src": ["'self'", "'unsafe-inline'"],
-#     },
-# }
+CSP_DEFAULT_SRC = ["'self'",]
+CSP_SCRIPT_SRC = ["'self'", "'unsafe-inline'", "https:"]
+CSP_STYLE_SRC = ["'self'", "https:", "'unsafe-inline'"]
+CSP_FRAME_ANCESTORS = ["'self'"] + [url.strip() for url in config('CSP_FRAME_ANCESTORS', 'canvas-test.it.umich.edu').split(',')] 
+CSP_IMG_SRC = ["'self'", "data:"]
+CSP_FONT_SRC = ["'self'"]
