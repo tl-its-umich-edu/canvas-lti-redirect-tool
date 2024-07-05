@@ -2,11 +2,14 @@
 <html>
 <head>
     <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}{% endblock %}</title>
     {% load static %}
-    <link rel="stylesheet" type="text/css" href="{% static 'home.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'home.css' %}" />
     <script type=""text/javascript">
     window.onload = function() {
+        let currentYear = new Date().getFullYear();
+        document.getElementById('year').textContent = currentYear;
         let maizey_url = "{{ maizey_url }}"
         if(maizey_url) {
             window.open(maizey_url, '_blank')
@@ -19,7 +22,7 @@
 <div class="navbar">
     <a href="{% url 'home' %}" class="navbar-brand">LTI Redirect TOOL</a>
     {% if user.is_authenticated and user.is_superuser %}
-    <a class="navbar-item" href="{% url 'admin:index' %}">Admin</a>
+    <a class="navbar-item" href="{% url 'admin:index' %}" target="_blank">Admin</a>
     {% endif %}
     {% if user.is_authenticated %}
     <span class="navbar-user">{{ user.username }}</span>
@@ -31,7 +34,7 @@
     {% endblock %}
     <hr/>
     <footer>
-        <p>&copy; 2024  The Regents of the University of Michigan</p>
+        <p>&copy; <span id="year"></span>  The Regents of the University of Michigan</p>
     </footer>
 </div>
 </body>

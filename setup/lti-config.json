@@ -30,7 +30,7 @@
       "term_name": "$Canvas.term.name",
       "canvas_url": "$Canvas.api.baseUrl",
       "term_start": "$Canvas.term.startAt",
-      "redirect_url": "https://dev.dev.umgpt.umich.edu/",
+      "redirect_url": "https://dev2.dev.umgpt.umich.edu/",
       "course_status": "$Canvas.course.workflowState",
       "user_canvas_id": "$Canvas.user.id",
       "course_account_name": "$Canvas.account.name",

@@ -63,7 +63,6 @@ def login_user_from_lti(request, launch_data):
 
 class ApplicationLaunchView(LtiLaunchBaseView):
     
-    # @xframe_options_exempt
     def handle_resource_launch(self, request, lti_launch):
         ...  # Required. Typically redirects the users to the appropriate page.
         launch_data = lti_launch.get_launch_data()
@@ -77,10 +76,7 @@ class ApplicationLaunchView(LtiLaunchBaseView):
         context = {
             "maizey_url": maizey_url,
         }
-        if request.user.is_superuser:
-            return render(request, "home.html", context)
-        else:
-            return HttpResponseRedirect(maizey_url)
+        return render(request, "home.html", context)
 
     def handle_deep_linking_launch(self, request, lti_launch):
         ...  # Optional.
