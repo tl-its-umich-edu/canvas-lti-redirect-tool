@@ -73,10 +73,7 @@ class ApplicationLaunchView(LtiLaunchBaseView):
         maizey_url = SendToMaizey(launch_data).send_to_maizey()
         if not maizey_url:
             return redirect("error")
-        context = {
-            "maizey_url": maizey_url,
-        }
-        return render(request, "home.html", context)
+        return HttpResponseRedirect(maizey_url)
 
     def handle_deep_linking_launch(self, request, lti_launch):
         ...  # Optional.
