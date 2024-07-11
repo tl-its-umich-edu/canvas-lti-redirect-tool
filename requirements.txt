@@ -8,4 +8,3 @@ django-mysql==4.14.0
 gunicorn==22.0.0
 whitenoise==6.7.0
 debugpy==1.8.2
-django-redis==5.4.0
