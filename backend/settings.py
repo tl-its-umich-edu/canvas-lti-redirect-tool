@@ -157,15 +157,15 @@ DATABASES = {
     }
 }
 
-# This is needed to allow the LTI tool to work with the Django cache when running on multiple workers
 CACHES = {
     "default": {
-        "BACKEND": "django_mysql.cache.MySQLCache",
-        "LOCATION": "django_clrt_cache",
-        "KEY_PREFIX": "clrt",
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": config('REDIS_LOCATION', "redis://127.0.0.1:6379/1"),
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
