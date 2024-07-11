@@ -1,5 +1,5 @@
 {
-  "title": "Canvas LTI Redirect Tool",
+  "title": "Canvas LTI Redirect Tool 🔗 ",
   "scopes": [],
   "extensions": [
       {
@@ -10,6 +10,7 @@
               "placements": [
                   {
                     "default": "disabled",  
+                    "windowTarget": "_blank",
                     "placement": "course_navigation",
                     "message_type": "LtiResourceLinkRequest",
                     "target_link_uri": "https://{app-hostname}/ltilaunch"

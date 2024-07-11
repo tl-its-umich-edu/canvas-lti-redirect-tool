@@ -67,6 +67,7 @@ python manage.py shell -c "from django.core.management.utils import get_random_s
 
 ## Make a user superuser
 1. go to the `auth_user` table and set `is_superuser` and `is_staff` to `1` or `true` this will give the logged user access to admin interface
+2. In order to access the admin interface for to https://<tool-hostname>/admin
 
 
 
