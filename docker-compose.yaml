@@ -12,7 +12,7 @@ services:
     ports:
       - "4306:3306"
     volumes:
-      - clrt-mysql-data:/var/lib/mysql
+      - ./.data/mysql:/var/lib/mysql
     container_name: clrt_mysql_host
 
   redis:
@@ -44,5 +44,4 @@ services:
     container_name: clrt_web
 
 volumes:
-  clrt-mysql-data:
   clrt-redis-data:
