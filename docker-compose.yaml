@@ -12,8 +12,19 @@ services:
     ports:
       - "4306:3306"
     volumes:
-       - ./.data/mysql:/var/lib/mysql
+      - ./.data/mysql:/var/lib/mysql
     container_name: clrt_mysql_host
+
+  redis:
+    image: redis:7
+    command: redis-server --stop-writes-on-bgsave-error no --save ""
+    # This is to simulate an Openshift container with no write permission except to /tmp
+    read_only: true
+    tmpfs:
+        - /tmp
+    volumes:
+        - clrt-redis-data:/data:ro
+    container_name: clrt_redis_host
 
   web:
     build: 
@@ -31,3 +42,6 @@ services:
     env_file:
       - .env
     container_name: clrt_web
+
+volumes:
+  clrt-redis-data:
