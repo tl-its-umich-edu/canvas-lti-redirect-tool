@@ -54,13 +54,13 @@ python manage.py shell -c "from django.core.management.utils import get_random_s
 6. Goto `LTIRegistration` to configure an LTI tool from admin console. This will create the `uuid` automatically. Hold on to that value and update the `OpenID Connect Initiation Url` in the LTI tool registration from Canvas with this id. 
    ` for Eg: https://clrt-local.loophole.site/init/0b54a91b-cac6-4c96-ba1e/`
 7. use the `setup/lti-config.json` for registing the LTI tool. Replace all the `{app-hostname}` with your web proxy url and <uuid:lti-registration> with UUID value from LTI tool registration.  
-8. Configure the LTI configuration from CLRT tool going to admin again. Give the following value. Note: `<canvas-instance>: ['canvas.test', 'canvas.beta']`
+8. Configure the LTI configuration from CLRT tool going to admin again. Give the following value. Note: `<canvas-lti-platform>: ['canvas.test', 'canvas.beta', 'canvas']` and <canvas-platform-url>: [`sso.test.canvaslms.com`, `sso.beta.canvaslms.com`, `sso.canvaslms.com`]. [Documentation](https://canvas.instructure.com/doc/api/file.lti_dev_key_config.html) Domain URL changes
       1. Name: any name
       2. Issuer: https://<canvas-instance>.instructure.com
       2. Client ID: (get this from Platform)
-      3. Auth URL: https://<canvas-instance>.instructure.com/api/lti/authorize_redirect
-      4. Access token URL: https://<canvas-instance>.instructure.com/login/oauth2/token
-      5. Keyset URL: https://<canvas-instance>.instructure.com/api/lti/security/jwks
+      3. Auth URL: https://<canvas-platform-url>.instructure.com/api/lti/authorize_redirect
+      4. Access token URL: https://<canvas-platform-url>.instructure.com/login/oauth2/token
+      5. Keyset URL: https://<canvas-platform-url>.instructure.com/api/lti/security/jwks
       6. DEPLOYMENT ID: get this as it is described the step 7 and paste 
 9. Save
 10. Go to the Canvas(platform) add the LTI tool at account/course level and copy the deployment id by clicking the setting button next to it.
