@@ -1,3 +1,4 @@
+import datetime
 import jwt, logging
 from decouple import config
 from jwt.exceptions import InvalidKeyError
@@ -14,9 +15,10 @@ class SendToMaizey():
     def get_restructured_data(self):
       course_title = self.lti_launch_data['https://purl.imsglobal.org/spec/lti/claim/context']['title']
       lis = self.lti_launch_data['https://purl.imsglobal.org/spec/lti/claim/lis']
-
+      expiration_time = datetime.datetime.utcnow() + datetime.timedelta(hours=1)
       # Restructure the course info for Maizey needs
       restructured_data = {
+      "exp" : expiration_time,
       "canvas_url": self.lti_custom_data["canvas_url"],
       "course": {
           "id": self.lti_custom_data["course_id"],
