@@ -15,7 +15,7 @@ class SendToMaizey():
     def get_restructured_data(self):
       course_title = self.lti_launch_data['https://purl.imsglobal.org/spec/lti/claim/context']['title']
       lis = self.lti_launch_data['https://purl.imsglobal.org/spec/lti/claim/lis']
-      expiration_time = datetime.datetime.utcnow() + datetime.timedelta(hours=1)
+      expiration_time = datetime.datetime.utcnow() + datetime.timedelta(seconds=300)
       # Restructure the course info for Maizey needs
       restructured_data = {
       "exp" : expiration_time,
