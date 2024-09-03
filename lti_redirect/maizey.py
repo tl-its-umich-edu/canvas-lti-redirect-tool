@@ -2,6 +2,7 @@ from datetime import datetime, timedelta, timezone
 import jwt, logging
 from decouple import config
 from jwt.exceptions import InvalidKeyError
+from lti_redirect.utils.utils import check_email_parameter
 
 logger = logging.getLogger(__name__)
 
@@ -38,8 +39,9 @@ class SendToMaizey():
           "login_id": self.lti_custom_data["login_id"],
           "sis_id": lis["person_sourcedid"],
           "roles": self.lti_custom_data["roles"].split(","),
-          "email_address": self.lti_launch_data["email"],
+          "email_address": check_email_parameter(self.lti_launch_data),
           "name": self.lti_launch_data["name"],
+          "is_proxied_user": self.lti_custom_data["masquerade_user_canvas_id"].isdigit() 
       } ,
       "account": {
           "id": self.lti_custom_data["course_canvas_account_id"],
@@ -57,7 +59,7 @@ class SendToMaizey():
        try:
         course_jwt = jwt.encode(self.get_restructured_data(), self.maizey_jwt_secret, algorithm='HS256')
         maizey_url = f"{self.lti_custom_data['redirect_url']}t2/canvaslink?token={course_jwt}"
-        logger.info(f"Maizey with course JWT URL: {maizey_url}")
+        logger.debug(f"Maizey with course JWT URL: {maizey_url}")
        except (InvalidKeyError,Exception) as e:
            logger.error(f"Error encoding course data to JWT: {e}")
        return maizey_url

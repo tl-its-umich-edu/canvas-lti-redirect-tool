@@ -31,13 +31,14 @@
       "term_name": "$Canvas.term.name",
       "canvas_url": "$Canvas.api.baseUrl",
       "term_start": "$Canvas.term.startAt",
-      "redirect_url": "https://dev2.dev.umgpt.umich.edu/",
+      "redirect_url": "https://main.dev.umgpt.umich.edu/",
       "course_status": "$Canvas.course.workflowState",
       "user_canvas_id": "$Canvas.user.id",
       "course_account_name": "$Canvas.account.name",
       "course_enroll_status": "$Canvas.enrollment.enrollmentState",
       "course_sis_account_id": "$Canvas.course.sisSourceId",
-      "course_canvas_account_id": "$Canvas.account.id"
+      "course_canvas_account_id": "$Canvas.account.id",
+      "masquerade_user_canvas_id": "$Canvas.masqueradingUser.id"
   },
   "public_jwk_url": "https://{app-hostname}/.well-known/jwks.json",
   "target_link_uri": "https://{app-hostname}/ltilaunch",
