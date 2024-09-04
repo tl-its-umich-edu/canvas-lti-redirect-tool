@@ -7,7 +7,6 @@ from lti_tool.views import LtiLaunchBaseView
 from django.contrib.auth.models import User
 from lti_redirect.maizey import SendToMaizey
 from django.http import HttpResponseRedirect
-from lti_redirect.utils.utils import check_email_parameter
 
 logger = logging.getLogger(__name__)
 
@@ -39,9 +38,9 @@ def validate_custom_lti_launch_data(lti_launch):
 
 def login_user_from_lti(request, launch_data):
     try:
-        first_name = launch_data['given_name']
-        last_name = launch_data['family_name']
-        email = check_email_parameter(launch_data)
+        first_name = launch_data.get('given_name')
+        last_name = launch_data.get('family_name')
+        email = launch_data.get('email')
         username = launch_data['https://purl.imsglobal.org/spec/lti/claim/custom']['login_id']
         logger.info(f'the user {first_name} {last_name} {email} {username} launch the tool')
         user_obj = User.objects.get(username=username)

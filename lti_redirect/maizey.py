@@ -2,7 +2,6 @@ from datetime import datetime, timedelta, timezone
 import jwt, logging
 from decouple import config
 from jwt.exceptions import InvalidKeyError
-from lti_redirect.utils.utils import check_email_parameter
 
 logger = logging.getLogger(__name__)
 
@@ -24,7 +23,7 @@ class SendToMaizey():
       "course": {
           "id": self.lti_custom_data["course_id"],
           "name": course_title,
-          "sis_id": lis["course_offering_sourcedid"],
+          "sis_id": lis.get("course_offering_sourcedid"),
           "workflow_state": self.lti_custom_data["course_status"],
           "enroll_status":self.lti_custom_data["course_enroll_status"]
       },
@@ -37,9 +36,9 @@ class SendToMaizey():
       "user": {
           "id": self.lti_custom_data["user_canvas_id"],
           "login_id": self.lti_custom_data["login_id"],
-          "sis_id": lis["person_sourcedid"],
+          "sis_id": lis.get("person_sourcedid"),
           "roles": self.lti_custom_data["roles"].split(","),
-          "email_address": check_email_parameter(self.lti_launch_data),
+          "email_address": self.lti_launch_data.get("email"),
           "name": self.lti_launch_data["name"],
           "is_proxied_user": self.lti_custom_data["masquerade_user_canvas_id"].isdigit() 
       } ,
