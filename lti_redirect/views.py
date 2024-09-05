@@ -22,7 +22,7 @@ def validate_custom_lti_launch_data(lti_launch):
     "roles", "term_id", "login_id", "term_end", "course_id", "term_name", "canvas_url", 
     "term_start", "redirect_url", "course_status", "user_canvas_id", 
     "course_account_name", "course_enroll_status", "course_sis_account_id", 
-    "course_canvas_account_id"]
+    "course_canvas_account_id", 'masquerade_user_canvas_id' ]
     main_key = "https://purl.imsglobal.org/spec/lti/claim/custom"
     if main_key not in lti_launch:
         logger.error(f"LTI custom '{main_key}' variables are not configured")
@@ -38,9 +38,9 @@ def validate_custom_lti_launch_data(lti_launch):
 
 def login_user_from_lti(request, launch_data):
     try:
-        first_name = launch_data['given_name']
-        last_name = launch_data['family_name']
-        email = launch_data['email']
+        first_name = launch_data.get('given_name')
+        last_name = launch_data.get('family_name')
+        email = launch_data.get('email')
         username = launch_data['https://purl.imsglobal.org/spec/lti/claim/custom']['login_id']
         logger.info(f'the user {first_name} {last_name} {email} {username} launch the tool')
         user_obj = User.objects.get(username=username)
