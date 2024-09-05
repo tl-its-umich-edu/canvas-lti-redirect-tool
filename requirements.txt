@@ -1,4 +1,4 @@
-django==5.0.6
+django==5.0.8
 pyjwt==2.8.0
 django-lti==0.6.0
 django-csp==3.8
