@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 import os, logging
 from pathlib import Path
 from decouple import config
+from csp.constants import SELF
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level='INFO')
@@ -56,6 +57,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     "whitenoise.runserver_nostatic",
     'django.contrib.staticfiles',
+    'csp',
     'django_mysql',
     'lti_redirect',
     'lti_tool',
@@ -206,9 +208,13 @@ STATIC_URL = '/static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-CSP_DEFAULT_SRC = ["'self'",]
-CSP_SCRIPT_SRC = ["'self'", "'unsafe-inline'", "https:"]
-CSP_STYLE_SRC = ["'self'", "https:", "'unsafe-inline'"]
-CSP_FRAME_ANCESTORS = ["'self'"] + [url.strip() for url in config('CSP_FRAME_ANCESTORS', 'canvas-test.it.umich.edu').split(',')] 
-CSP_IMG_SRC = ["'self'", "data:"]
-CSP_FONT_SRC = ["'self'"]
+CONTENT_SECURITY_POLICY = {
+    "DIRECTIVES": {
+        "default-src": [SELF],
+        "script-src": [SELF, "'unsafe-inline'", "https:"],
+        "style-src": [SELF, "https:", "'unsafe-inline'"],
+        "frame-ancestors": [SELF] + [url.strip() for url in config('CSP_FRAME_ANCESTORS', 'canvas-test.it.umich.edu').split(',')],
+        "img-src": [SELF, "data:"],
+        "font-src": [SELF],
+    },
+}
