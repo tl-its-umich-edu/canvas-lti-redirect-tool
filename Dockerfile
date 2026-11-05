@@ -1,4 +1,4 @@
-FROM python:3.10-slim-bookworm
+FROM python:3.14-slim-trixie
 
 EXPOSE 6000
 WORKDIR /code
@@ -21,7 +21,7 @@ COPY . .
 RUN python manage.py collectstatic --verbosity 0 --noinput
 
 ARG TZ
-ENV TZ ${TZ:-America/Detroit}
+ENV TZ=${TZ:-America/Detroit}
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 CMD ["/code/start.sh"]
