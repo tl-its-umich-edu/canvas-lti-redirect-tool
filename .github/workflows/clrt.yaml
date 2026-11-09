@@ -22,6 +22,9 @@ jobs:
   build:
     # to test a feature, change the repo name to your github id
     if: github.repository_owner == 'tl-its-umich-edu' || github.event_name == 'workflow_dispatch'
+    permissions:
+      contents: read
+      packages: write
     runs-on: ubuntu-latest
     steps:
   
