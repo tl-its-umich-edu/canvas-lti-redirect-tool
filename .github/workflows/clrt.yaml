@@ -21,12 +21,12 @@ env:
 jobs:
   build:
     # to test a feature, change the repo name to your github id
-    if: github.repository_owner == 'tl-its-umich-edu'
+    if: github.repository_owner == 'tl-its-umich-edu' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
   
       - name: Checkout code 
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
     
       - name: Extract branch name
         id: extract_branch
@@ -34,10 +34,10 @@ jobs:
       
       - name: build Docker image
         run: |
-          docker build . --tag ghcr.io/${{ env.REPO_URL }}:${BRANCH_NAME}
+          docker build --platform linux/amd64 . --tag ghcr.io/${{ env.REPO_URL }}:${BRANCH_NAME}
       
       - name: Login to GitHub Container Registry
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
             registry: ghcr.io
             username: ${{ github.actor }}
