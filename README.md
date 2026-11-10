@@ -37,6 +37,14 @@ mostly just MySQL information as well as locations of other configuration files.
 python manage.py shell -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"
 ```
 
+## Published container image
+
+The CLRT Build/Release workflow publishes a single `linux/amd64` image manifest to
+GitHub Container Registry. Provenance and SBOM attestations are disabled to avoid
+wrapping the image in an image index with an additional `unknown/unknown`
+attestation entry. This intentionally omits attached build provenance and SBOM
+metadata.
+
 ## LTI install
 1. Need to run this command once docker container is up in order for LTI to work. This is important step otherwise the LTI tool launch won't happen
 ```sh
@@ -68,6 +76,5 @@ python manage.py shell -c "from django.core.management.utils import get_random_s
 ## Make a user superuser
 1. go to the `auth_user` table and set `is_superuser` and `is_staff` to `1` or `true` this will give the logged user access to admin interface
 2. In order to access the admin interface for to https://<tool-hostname>/admin
-
 
 
